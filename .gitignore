@@ -1,0 +1,11 @@
+node_modules/
+__pycache__/
+*.pyc
+env/
+venv/
+.env
+database.db
+unknown_faces/
+Captured_Students_in_Lab/
+temp_scan.jpg
+.DS_Store
