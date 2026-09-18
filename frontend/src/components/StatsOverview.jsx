@@ -3,7 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Users, UserCheck, ShieldAlert, TrendingUp, Activity, ArrowUpRight } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const containerVariants = {
   hidden: { opacity: 0 },

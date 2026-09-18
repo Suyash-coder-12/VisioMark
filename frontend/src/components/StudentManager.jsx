@@ -3,7 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, CheckCircle2, User, Trash2, Camera, Database, FileText } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 export const RegisterStudent = () => {
   const [formData, setFormData] = useState({ name: '', roll_no: '', department: '' });

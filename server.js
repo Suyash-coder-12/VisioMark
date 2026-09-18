@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -298,6 +299,28 @@ app.post('/api/scan-frame', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+// Proxy requests for the fast scanner API
+app.use('/scan', createProxyMiddleware({ target: 'http://127.0.0.1:5001', changeOrigin: true }));
+
+// Serve frontend static files
+const frontendDistPath = path.join(__dirname, 'frontend', 'dist');
+// Serve static files without condition so Express registers the middleware
+app.use(express.static(frontendDistPath));
+
+// Catch-all route to serve index.html for SPA routing
+app.get('*', (req, res) => {
+    // don't interfere with API routes
+    if(req.path.startsWith('/api/') || req.path.startsWith('/known_faces') || req.path.startsWith('/unknown_faces') || req.path.startsWith('/scan')) {
+        return res.status(404).json({error: "Not found"});
+    }
+    const indexPath = path.join(frontendDistPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send("Frontend build not found.");
+    }
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on http://0.0.0.0:${PORT}`);
 });

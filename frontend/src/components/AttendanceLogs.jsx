@@ -3,7 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Search, Download, FileSpreadsheet } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const AttendanceLogs = () => {
   const [logs, setLogs] = useState([]);

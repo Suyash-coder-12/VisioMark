@@ -3,7 +3,7 @@ import axios from 'axios';
 // Optional: If you are using Lucide or Heroicons, you can import icons here
 // import { Users, AlertTriangle } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const Dashboard = () => {
   const [attendance, setAttendance] = useState([]);

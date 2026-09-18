@@ -4,7 +4,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Camera, StopCircle, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const LiveScanner = () => {
   const webcamRef = useRef(null);
@@ -24,8 +24,8 @@ const LiveScanner = () => {
 
     setLoading(true);
     try {
-      // Send directly to the fast Python Flask API instead of Node proxy
-      const response = await axios.post(`http://localhost:5001/scan`, { image: imageSrc });
+      // Send to the scan endpoint which is proxied by the Node API
+      const response = await axios.post(`/scan`, { image: imageSrc });
       setResults(response.data || []);
       setError('');
     } catch (err) {
