@@ -138,7 +138,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
             transition={{ type: 'spring', delay: 0.3 }}
             className="bg-slate-900 rounded-lg shadow-md overflow-hidden border border-slate-200 shrink-0"
           >
-            <img src="/logo.jpg" alt="Logo" className="w-11 h-11 object-cover" />
+            <img src="/logo.jpg" alt="Logo" className="w-11 h-11 object-contain bg-white" />
           </motion.div>
           <div>
             <h1 className="text-xl font-bold text-slate-800 tracking-tight">VisioMark</h1>

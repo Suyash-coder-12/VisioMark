@@ -24,23 +24,23 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Infinity Background Animation */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+      <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-          className="w-[80vw] h-[80vw] md:w-[600px] md:h-[600px] border-[1px] border-blue-500/30 rounded-full flex items-center justify-center"
+          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          className="w-[90vw] h-[90vw] md:w-[700px] md:h-[700px] border-[1px] border-red-500/30 rounded-full flex items-center justify-center"
         >
           <motion.div
             animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-            className="w-[60vw] h-[60vw] md:w-[400px] md:h-[400px] border-[1px] border-cyan-400/20 rounded-full flex items-center justify-center"
+            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+            className="w-[70vw] h-[70vw] md:w-[500px] md:h-[500px] border-[1px] border-blue-900/40 rounded-full flex items-center justify-center"
           >
             <motion.div
-              animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-              className="w-[40vw] h-[40vw] md:w-[200px] md:h-[200px] border-[2px] border-blue-400/10 rounded-full border-t-blue-400"
+              animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+              transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
+              className="w-[50vw] h-[50vw] md:w-[300px] md:h-[300px] border-[2px] border-red-500/20 rounded-full border-t-red-500/60"
             />
           </motion.div>
         </motion.div>
@@ -50,12 +50,12 @@ const Login = ({ onLogin }) => {
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, type: 'spring' }}
-        className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 md:p-10 z-10"
+        className="w-full max-w-md bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-8 md:p-10 z-10"
       >
         <div className="flex justify-center mb-8">
           <div className="relative">
-            <div className="absolute inset-0 bg-blue-500 blur-xl opacity-50 rounded-full"></div>
-            <img src="/logo.jpg" alt="VisioMark Logo" className="w-20 h-20 rounded-2xl relative z-10 shadow-lg border border-white/20 object-cover" />
+            <div className="absolute inset-0 bg-red-500 blur-xl opacity-30 rounded-full"></div>
+            <img src="/logo.jpg" alt="VisioMark Logo" className="w-20 h-20 rounded-2xl relative z-10 shadow-lg border border-white/20 object-contain bg-white" />
           </div>
         </div>
         
