@@ -308,7 +308,7 @@ const frontendDistPath = path.join(__dirname, 'frontend', 'dist');
 app.use(express.static(frontendDistPath));
 
 // Catch-all route to serve index.html for SPA routing
-app.get('*', (req, res) => {
+app.get(/^.*$/, (req, res) => {
     // don't interfere with API routes
     if(req.path.startsWith('/api/') || req.path.startsWith('/known_faces') || req.path.startsWith('/unknown_faces') || req.path.startsWith('/scan')) {
         return res.status(404).json({error: "Not found"});
