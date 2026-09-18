@@ -19,10 +19,10 @@ WORKDIR /app
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-# Limit CMake parallel jobs to prevent Out-Of-Memory (OOM) errors on Render's build servers
-ENV CMAKE_BUILD_PARALLEL_LEVEL=2
-ENV MAKEFLAGS="-j2"
-RUN pip install --no-cache-dir -r requirements.txt
+# We use dlib-bin in requirements to skip 20 minutes of OOM-prone compilation.
+# Then install face_recognition without dependencies so it doesn't trigger source build of dlib.
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir --no-deps face-recognition==1.3.0
 
 # Install Backend Node dependencies
 COPY package*.json ./
