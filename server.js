@@ -13,7 +13,11 @@ const KNOWN_FACES_DIR = path.join(__dirname, 'known_faces');
 const UNKNOWN_FACES_DIR = path.join(__dirname, 'unknown_faces');
 
 app.set('etag', false); // Disable etag
-app.use(cors());
+const corsOptions = {
+    origin: ['http://localhost:5173', 'https://visiomark-0cdm.onrender.com'],
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 
 // Middleware to prevent caching globally

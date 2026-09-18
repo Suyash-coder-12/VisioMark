@@ -10,7 +10,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://visiomark-0cdm.onrender.com"]}})
 
 KNOWN_FACES_DIR = 'known_faces'
 UNKNOWN_FACES_DIR = 'unknown_faces'
