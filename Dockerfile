@@ -2,15 +2,12 @@
 FROM python:3.10-slim
 
 # Install system dependencies required for OpenCV, dlib (face_recognition), and Node.js
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
     cmake \
     libopenblas-dev \
     liblapack-dev \
-    libx11-dev \
-    libgtk-3-dev \
-    libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (v20)
