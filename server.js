@@ -12,8 +12,17 @@ const DB_PATH = path.join(__dirname, 'attendance.db');
 const KNOWN_FACES_DIR = path.join(__dirname, 'known_faces');
 const UNKNOWN_FACES_DIR = path.join(__dirname, 'unknown_faces');
 
+app.set('etag', false); // Disable etag
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+// Middleware to prevent caching globally
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    next();
+});
 
 // Ensure directories exist
 if (!fs.existsSync(KNOWN_FACES_DIR)) fs.mkdirSync(KNOWN_FACES_DIR);
