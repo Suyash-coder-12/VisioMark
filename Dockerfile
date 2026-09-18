@@ -17,8 +17,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 
 WORKDIR /app
 
-# Install Python dependencies first (better caching)
+# Copy requirements and install Python dependencies
 COPY requirements.txt .
+# Limit CMake parallel jobs to prevent Out-Of-Memory (OOM) errors on Render's build servers
+ENV CMAKE_BUILD_PARALLEL_LEVEL=2
+ENV MAKEFLAGS="-j2"
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Backend Node dependencies
