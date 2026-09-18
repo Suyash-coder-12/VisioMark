@@ -67,7 +67,7 @@ const StatsOverview = () => {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
       >
         {cards.map((card, index) => {
           const Icon = card.icon;
@@ -101,7 +101,7 @@ const StatsOverview = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, type: 'spring', stiffness: 200, damping: 20 }}
-        className="bg-white border border-slate-200 rounded-xl p-8 h-96 flex flex-col items-center justify-center text-slate-400 relative overflow-hidden shadow-sm"
+        className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 h-64 md:h-96 flex flex-col items-center justify-center text-center text-slate-400 relative overflow-hidden shadow-sm"
       >
         <TrendingUp className="w-16 h-16 mb-6 text-slate-200" />
         <p className="font-bold text-2xl text-slate-600 relative z-10">Historical Data Insights</p>

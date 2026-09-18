@@ -122,12 +122,11 @@ def scan_frame():
         if frame_bgr is None:
              return jsonify([]), 200
 
-        # Small resize for super fast web scanning if needed (optional)
-        small_frame = cv2.resize(frame_bgr, (0, 0), fx=0.5, fy=0.5)
-        rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
+        # Use original frame size for accurate detection
+        rgb_frame = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
         
-        face_locations = face_recognition.face_locations(rgb_small_frame)
-        face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+        face_locations = face_recognition.face_locations(rgb_frame)
+        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
         
         results = []
         conn = setup_db()
@@ -142,12 +141,6 @@ def scan_frame():
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
                         name = known_names[best_match_index]
-            
-            # Map coordinates back to original size
-            top *= 2
-            right *= 2
-            bottom *= 2
-            left *= 2
             
             if name != "Unknown":
                 original_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)

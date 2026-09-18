@@ -13,49 +13,62 @@ const LiveScanner = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // Interval ref to handle continuous scanning
-  const scanIntervalRef = useRef(null);
+  // Refs for scan loop control
+  const isScanningRef = useRef(false);
+  const isRequestInFlight = useRef(false);
+  const scanTimeoutRef = useRef(null);
 
   const captureAndScan = useCallback(async () => {
-    if (!webcamRef.current) return;
+    if (!webcamRef.current || !isScanningRef.current || isRequestInFlight.current) return;
     
     const imageSrc = webcamRef.current.getScreenshot();
-    if (!imageSrc) return;
+    if (!imageSrc) {
+       // Try again shortly if screenshot fails
+       scanTimeoutRef.current = setTimeout(captureAndScan, 800);
+       return;
+    }
 
     setLoading(true);
+    isRequestInFlight.current = true;
     try {
       // Send to the scan endpoint which is proxied by the Node API
       const response = await axios.post(`/scan`, { image: imageSrc });
-      setResults(response.data || []);
-      setError('');
+      if (isScanningRef.current) {
+        setResults(response.data || []);
+        setError('');
+      }
     } catch (err) {
       console.error("Scanner Error:", err);
     } finally {
       setLoading(false);
+      isRequestInFlight.current = false;
+      // Queue next scan if still scanning
+      if (isScanningRef.current) {
+         scanTimeoutRef.current = setTimeout(captureAndScan, 800);
+      }
     }
   }, [webcamRef]);
 
   const toggleScanning = () => {
     if (isScanning) {
       // Stop
-      clearInterval(scanIntervalRef.current);
+      isScanningRef.current = false;
+      if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
       setIsScanning(false);
       setResults([]);
     } else {
       // Start
       setIsScanning(true);
-      // Scan immediately, then every 800ms for fast scanning
+      isScanningRef.current = true;
       captureAndScan();
-      scanIntervalRef.current = setInterval(() => {
-        captureAndScan();
-      }, 800); // 800ms creates a fast "live" feel without crashing the browser
     }
   };
 
   // Cleanup on unmount
   React.useEffect(() => {
     return () => {
-      if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+      isScanningRef.current = false;
+      if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
     };
   }, []);
 
@@ -89,7 +102,7 @@ const LiveScanner = () => {
 
       <div className="flex-1 p-8 bg-slate-50 flex flex-col items-center justify-center relative">
         {/* Webcam Container */}
-        <div className="relative bg-black rounded-2xl overflow-hidden shadow-lg border-4 border-slate-200" style={{ width: 640, height: 480 }}>
+        <div className="relative w-full max-w-[640px] aspect-[4/3] mx-auto bg-black rounded-2xl overflow-hidden shadow-lg border-4 border-slate-200">
           <Webcam
             audio={false}
             ref={webcamRef}
@@ -100,7 +113,7 @@ const LiveScanner = () => {
           
           {/* Overlay Box for Scanner Effect */}
           {!isScanning && (
-            <div className="absolute inset-0 bg-slate-900/80 flex flex-col items-center justify-center text-white z-10 backdrop-blur-sm">
+            <div className="absolute inset-0 bg-slate-900/80 flex flex-col items-center justify-center text-white z-10 backdrop-blur-sm text-center p-4">
               <Camera className="w-16 h-16 mb-4 text-slate-400" />
               <p className="font-bold text-lg">Scanner is Offline</p>
               <p className="text-sm text-slate-400 mt-2">Click "Start Live Scan" to begin</p>
@@ -119,11 +132,11 @@ const LiveScanner = () => {
             const { top, right, bottom, left } = res.box;
             const isUnknown = res.name === "Unknown";
             
-            // Note: Box coordinates are based on the original image size sent to python.
-            // React webcam uses CSS scaling, but assuming 640x480 match, we can draw directly.
-            // face_recognition returns (top, right, bottom, left)
-            const width = right - left;
-            const height = bottom - top;
+            // Calculate percentages based on 640x480 intrinsic resolution
+            const topPct = (top / 480) * 100;
+            const leftPct = (left / 640) * 100;
+            const widthPct = ((right - left) / 640) * 100;
+            const heightPct = ((bottom - top) / 480) * 100;
 
             return (
               <motion.div 
@@ -132,14 +145,14 @@ const LiveScanner = () => {
                 key={i}
                 className="absolute border-2 z-20 shadow-sm"
                 style={{
-                  top: top,
-                  left: left,
-                  width: width,
-                  height: height,
+                  top: `${topPct}%`,
+                  left: `${leftPct}%`,
+                  width: `${widthPct}%`,
+                  height: `${heightPct}%`,
                   borderColor: isUnknown ? '#ef4444' : '#10b981', // red-500 or emerald-500
                 }}
               >
-                <div className={`absolute -bottom-8 left-0 -ml-0.5 px-3 py-1 text-sm font-bold text-white shadow-sm whitespace-nowrap ${isUnknown ? 'bg-red-500' : 'bg-emerald-500'}`}>
+                <div className={`absolute -bottom-8 left-0 -ml-0.5 px-2 md:px-3 py-1 text-xs md:text-sm font-bold text-white shadow-sm whitespace-nowrap ${isUnknown ? 'bg-red-500' : 'bg-emerald-500'}`}>
                   {res.name}
                 </div>
               </motion.div>

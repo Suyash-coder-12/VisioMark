@@ -33,18 +33,18 @@ const SettingsPanel = () => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[800px]">
       {/* Header */}
-      <div className="bg-slate-50 border-b border-slate-200 px-8 py-6 flex items-center justify-between sticky top-0 z-10">
+      <div className="bg-slate-50 border-b border-slate-200 px-4 md:px-8 py-4 md:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sticky top-0 z-10">
         <div className="flex items-center gap-4">
-          <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+          <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm shrink-0">
             <Settings2 className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-800 tracking-tight">System Configuration</h2>
-            <p className="text-sm text-slate-500 mt-1 font-medium">Manage AI parameters and access rules.</p>
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">System Configuration</h2>
+            <p className="text-xs md:text-sm text-slate-500 mt-1 font-medium">Manage AI parameters and access rules.</p>
           </div>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 self-start sm:self-auto">
           {saved && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-emerald-600 text-sm font-bold flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" /> Preferences Saved
@@ -60,7 +60,7 @@ const SettingsPanel = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-8 bg-white">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 bg-white">
         <div className="max-w-4xl mx-auto space-y-10">
 
           {/* Section 1: AI Recognition Settings */}

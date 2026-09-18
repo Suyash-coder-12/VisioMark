@@ -51,17 +51,17 @@ export const RegisterStudent = () => {
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
       className="max-w-3xl bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
     >
-      <div className="bg-slate-50 border-b border-slate-200 px-8 py-6 flex items-center gap-4">
-        <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+      <div className="bg-slate-50 border-b border-slate-200 px-4 md:px-8 py-6 flex items-center gap-4">
+        <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm shrink-0">
           <FileText className="w-6 h-6 text-blue-600" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Profile Enrollment</h2>
-          <p className="text-sm text-slate-500 mt-1 font-medium">Add new subjects to the secure directory.</p>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">Profile Enrollment</h2>
+          <p className="text-xs md:text-sm text-slate-500 mt-1 font-medium">Add new subjects to the secure directory.</p>
         </div>
       </div>
       
-      <form onSubmit={handleSubmit} className="p-8 space-y-8">
+      <form onSubmit={handleSubmit} className="p-4 md:p-8 space-y-8">
         <AnimatePresence>
           {status.message && (
             <motion.div 
@@ -159,21 +159,21 @@ export const ManageStudents = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      <div className="px-8 py-6 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+      <div className="px-4 md:px-8 py-6 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50">
         <div className="flex items-center gap-4">
-          <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+          <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm shrink-0">
             <Database className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Active Directory</h2>
-            <p className="text-sm text-slate-500 mt-1 font-medium">Manage enrolled subjects.</p>
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">Active Directory</h2>
+            <p className="text-xs md:text-sm text-slate-500 mt-1 font-medium">Manage enrolled subjects.</p>
           </div>
         </div>
-        <span className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-md text-sm font-bold shadow-sm">
+        <span className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-md text-sm font-bold shadow-sm self-start sm:self-auto">
           {students.length} Records
         </span>
       </div>
-      <div className="p-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <div className="p-4 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
         <AnimatePresence>
           {students.length > 0 ? students.map((student, i) => {
             const safeName = student.name.replace(/[^a-zA-Z0-9 ]/g, "");

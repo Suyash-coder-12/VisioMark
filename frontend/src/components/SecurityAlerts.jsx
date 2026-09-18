@@ -72,21 +72,21 @@ const SecurityAlerts = () => {
       {/* Red ambient glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-32 bg-red-600/10 blur-[80px] pointer-events-none" />
 
-      <div className="border-b border-red-500/20 bg-red-950/30 px-8 py-6 flex items-center justify-between relative z-10">
+      <div className="border-b border-red-500/20 bg-red-950/30 px-4 md:px-8 py-4 md:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
         <div className="flex items-center gap-4">
           <motion.div 
             animate={{ scale: [1, 1.1, 1] }} 
             transition={{ repeat: Infinity, duration: 2 }}
-            className="bg-red-500/20 p-3 rounded-xl border border-red-500/30"
+            className="bg-red-500/20 p-3 rounded-xl border border-red-500/30 shrink-0"
           >
             <AlertTriangle className="w-7 h-7 text-red-500" />
           </motion.div>
           <div>
-            <h2 className="text-2xl font-bold text-red-400">Security Breach Alerts</h2>
-            <p className="text-sm text-red-300/70 mt-1 tracking-wide">Unknown faces detected by AI cameras.</p>
+            <h2 className="text-xl md:text-2xl font-bold text-red-400">Security Breach Alerts</h2>
+            <p className="text-xs md:text-sm text-red-300/70 mt-1 tracking-wide">Unknown faces detected by AI cameras.</p>
           </div>
         </div>
-        <span className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold px-5 py-2 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+        <span className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold px-5 py-2 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.2)] self-start sm:self-auto">
           {alerts.length} Incidents
         </span>
       </div>
@@ -105,13 +105,13 @@ const SecurityAlerts = () => {
         )}
       </AnimatePresence>
       
-      <div className="p-8 overflow-y-auto flex-1 custom-scrollbar relative z-10">
+      <div className="p-4 md:p-8 overflow-y-auto flex-1 custom-scrollbar relative z-10">
         {loading && alerts.length === 0 ? (
           <div className="text-center py-20 text-slate-500 animate-pulse">Scanning logs...</div>
         ) : alerts.length > 0 ? (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
           >
             <AnimatePresence>
               {alerts.map((alert) => (
