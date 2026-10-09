@@ -18,6 +18,8 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
+// Proxy requests for the fast scanner API must be BEFORE express.json()
+app.use('/scan', createProxyMiddleware({ target: 'http://127.0.0.1:5001', changeOrigin: true }));
 app.use(express.json({ limit: '10mb' }));
 
 // Middleware to prevent caching globally
@@ -323,8 +325,7 @@ app.post('/api/scan-frame', (req, res) => {
     });
 });
 
-// Proxy requests for the fast scanner API
-app.use('/scan', createProxyMiddleware({ target: 'http://127.0.0.1:5001', changeOrigin: true }));
+// Proxy moved to top
 
 // Serve frontend static files
 const frontendDistPath = path.join(__dirname, 'frontend', 'dist');
