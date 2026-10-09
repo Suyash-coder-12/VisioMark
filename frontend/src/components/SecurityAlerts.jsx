@@ -68,25 +68,25 @@ const SecurityAlerts = () => {
   };
 
   return (
-    <div className="bg-slate-900/50 backdrop-blur-xl border border-red-500/20 rounded-2xl shadow-2xl shadow-red-500/10 overflow-hidden flex flex-col h-[800px] relative">
+    <div className="bg-white/80 backdrop-blur-xl border border-red-200 rounded-2xl shadow-xl overflow-hidden flex flex-col h-[800px] relative">
       {/* Red ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-32 bg-red-600/10 blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-32 bg-red-400/20 blur-[80px] pointer-events-none" />
 
-      <div className="border-b border-red-500/20 bg-red-950/30 px-4 md:px-8 py-4 md:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+      <div className="border-b border-red-100 bg-red-50/50 px-4 md:px-8 py-4 md:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
         <div className="flex items-center gap-4">
           <motion.div 
             animate={{ scale: [1, 1.1, 1] }} 
             transition={{ repeat: Infinity, duration: 2 }}
-            className="bg-red-500/20 p-3 rounded-xl border border-red-500/30 shrink-0"
+            className="bg-red-100 p-3 rounded-xl border border-red-200 shrink-0"
           >
-            <AlertTriangle className="w-7 h-7 text-red-500" />
+            <AlertTriangle className="w-7 h-7 text-red-600" />
           </motion.div>
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-red-400">Security Breach Alerts</h2>
-            <p className="text-xs md:text-sm text-red-300/70 mt-1 tracking-wide">Unknown faces detected by AI cameras.</p>
+            <h2 className="text-xl md:text-2xl font-extrabold text-red-700">Security Breach Alerts</h2>
+            <p className="text-xs md:text-sm text-red-500/80 mt-1 font-medium tracking-wide">Unknown faces detected by AI cameras.</p>
           </div>
         </div>
-        <span className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold px-5 py-2 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.2)] self-start sm:self-auto">
+        <span className="bg-white border border-red-200 text-red-600 text-sm font-bold px-5 py-2 rounded-full shadow-sm self-start sm:self-auto">
           {alerts.length} Incidents
         </span>
       </div>
@@ -97,17 +97,17 @@ const SecurityAlerts = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="m-6 mb-0 p-4 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center gap-3 border border-emerald-500/20 shadow-lg"
+            className="m-6 mb-0 p-4 bg-emerald-50 text-emerald-700 rounded-xl flex items-center gap-3 border border-emerald-200 shadow-sm font-semibold"
           >
             <CheckCircle2 className="w-5 h-5" />
-            <span className="font-semibold">{successMsg}</span>
+            <span>{successMsg}</span>
           </motion.div>
         )}
       </AnimatePresence>
       
       <div className="p-4 md:p-8 overflow-y-auto flex-1 custom-scrollbar relative z-10">
         {loading && alerts.length === 0 ? (
-          <div className="text-center py-20 text-slate-500 animate-pulse">Scanning logs...</div>
+          <div className="text-center py-20 text-slate-400 font-medium animate-pulse">Scanning logs...</div>
         ) : alerts.length > 0 ? (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -121,42 +121,42 @@ const SecurityAlerts = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   whileHover={{ y: -5 }}
-                  className="group bg-slate-800/50 backdrop-blur-md rounded-2xl overflow-hidden border border-red-500/20 shadow-lg flex flex-col"
+                  className="group bg-white rounded-2xl overflow-hidden border border-red-100 shadow-md flex flex-col transition-all hover:shadow-lg"
                 >
-                  <div className="relative aspect-square bg-slate-900 overflow-hidden">
+                  <div className="relative aspect-square bg-slate-100 overflow-hidden">
                     <img 
                       src={`${API_BASE_URL}/unknown_faces/${alert.image_path}`} 
                       alt="Unknown detection" 
-                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent"></div>
                     <div className="absolute top-3 right-3 flex items-center gap-2">
                       <span className="relative flex h-3 w-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                       </span>
-                      <span className="bg-red-500/90 text-white text-[10px] font-black px-2 py-1 rounded shadow-sm tracking-widest uppercase">
+                      <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded shadow-sm tracking-widest uppercase">
                         Unknown
                       </span>
                     </div>
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
-                      <p className="text-sm text-slate-400 font-medium mb-1">Detected Time</p>
-                      <p className="text-xl font-bold text-slate-200 mb-1">{alert.timestamp.split(' ')[1]}</p>
-                      <p className="text-xs text-slate-500 mb-5">{alert.timestamp.split(' ')[0]}</p>
+                      <p className="text-sm text-slate-500 font-semibold mb-1">Detected Time</p>
+                      <p className="text-xl font-bold text-slate-800 mb-1">{alert.timestamp.split(' ')[1]}</p>
+                      <p className="text-xs text-slate-400 font-medium mb-5">{alert.timestamp.split(' ')[0]}</p>
                     </div>
                     
                     <div className="flex gap-2">
                       <button 
                         onClick={() => setSelectedAlert(alert)}
-                        className="flex-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 text-sm font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_10px_rgba(59,130,246,0.1)] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                        className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-sm font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
                       >
                         <UserPlus className="w-4 h-4" /> Identify
                       </button>
                       <button
                         onClick={(e) => handleDeleteAlert(e, alert.id)}
-                        className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-sm font-semibold p-2.5 rounded-xl flex items-center justify-center transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)] hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                        className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-sm font-bold p-2.5 rounded-xl flex items-center justify-center transition-colors shadow-sm"
                         title="Delete Alert"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -172,11 +172,11 @@ const SecurityAlerts = () => {
             initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
             className="flex h-full items-center justify-center flex-col text-slate-500"
           >
-            <div className="bg-emerald-500/10 p-6 rounded-full mb-6 border border-emerald-500/20">
-              <ShieldAlert className="w-16 h-16 text-emerald-400" />
+            <div className="bg-emerald-50 p-6 rounded-full mb-6 border border-emerald-100">
+              <ShieldAlert className="w-16 h-16 text-emerald-500" />
             </div>
-            <p className="font-bold text-emerald-400 text-2xl tracking-tight">Perimeter Secure</p>
-            <p className="text-slate-400 mt-2">No unknown faces detected by the vision system.</p>
+            <p className="font-extrabold text-emerald-600 text-2xl tracking-tight">Perimeter Secure</p>
+            <p className="text-slate-500 mt-2 font-medium">No unknown faces detected by the vision system.</p>
           </motion.div>
         )}
       </div>
@@ -185,44 +185,44 @@ const SecurityAlerts = () => {
         {selectedAlert && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-              className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+              className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
             >
-              <div className="bg-slate-800/50 p-5 flex justify-between items-center border-b border-slate-700">
-                <h3 className="font-bold text-lg text-white">Identify & Register Subject</h3>
-                <button onClick={() => setSelectedAlert(null)} className="text-slate-400 hover:text-white transition-colors bg-slate-800 rounded-full p-1">&times;</button>
+              <div className="bg-slate-50 p-5 flex justify-between items-center border-b border-slate-200">
+                <h3 className="font-extrabold text-lg text-slate-800">Identify & Register Subject</h3>
+                <button onClick={() => setSelectedAlert(null)} className="text-slate-500 hover:text-slate-800 transition-colors bg-slate-200 rounded-full p-1">&times;</button>
               </div>
               <div className="p-6">
-                <div className="flex gap-5 mb-6 bg-slate-800/30 p-4 rounded-xl border border-slate-700/50">
-                  <img src={`${API_BASE_URL}/unknown_faces/${selectedAlert.image_path}`} className="w-24 h-24 rounded-lg object-cover border border-slate-600 shadow-md" />
-                  <div className="text-sm text-slate-300">
-                    <p className="text-slate-500 font-medium mb-1">Incident Time</p>
-                    <p className="font-semibold text-slate-200 bg-slate-800 px-2 py-1 rounded inline-block">{selectedAlert.timestamp}</p>
-                    <p className="mt-3 text-xs text-blue-400/80 leading-relaxed">Registering will move this photo to Known Faces and retrain the Neural Network instantly.</p>
+                <div className="flex gap-5 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <img src={`${API_BASE_URL}/unknown_faces/${selectedAlert.image_path}`} className="w-24 h-24 rounded-lg object-cover border border-slate-300 shadow-sm" />
+                  <div className="text-sm">
+                    <p className="text-slate-500 font-bold mb-1">Incident Time</p>
+                    <p className="font-semibold text-slate-700 bg-white border border-slate-200 px-2 py-1 rounded inline-block shadow-sm">{selectedAlert.timestamp}</p>
+                    <p className="mt-3 text-xs text-blue-600 font-medium leading-relaxed">Registering will move this photo to Known Faces and retrain the Neural Network instantly.</p>
                   </div>
                 </div>
                 
                 <form onSubmit={handleConvert} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-400 mb-2">Subject Full Name</label>
-                    <input autoFocus type="text" required value={registerData.name} onChange={e => setRegisterData({...registerData, name: e.target.value})} className="w-full bg-slate-950/50 text-white px-4 py-3 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Enter recognized name" />
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Subject Full Name</label>
+                    <input autoFocus type="text" required value={registerData.name} onChange={e => setRegisterData({...registerData, name: e.target.value})} className="w-full bg-white text-slate-800 px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow shadow-sm placeholder:text-slate-400" placeholder="Enter recognized name" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-400 mb-2">Roll No</label>
-                      <input type="text" value={registerData.roll_no} onChange={e => setRegisterData({...registerData, roll_no: e.target.value})} className="w-full bg-slate-950/50 text-white px-4 py-3 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Optional" />
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Roll No</label>
+                      <input type="text" value={registerData.roll_no} onChange={e => setRegisterData({...registerData, roll_no: e.target.value})} className="w-full bg-white text-slate-800 px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow shadow-sm placeholder:text-slate-400" placeholder="Optional" />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-400 mb-2">Department</label>
-                      <input type="text" value={registerData.department} onChange={e => setRegisterData({...registerData, department: e.target.value})} className="w-full bg-slate-950/50 text-white px-4 py-3 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Optional" />
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Department</label>
+                      <input type="text" value={registerData.department} onChange={e => setRegisterData({...registerData, department: e.target.value})} className="w-full bg-white text-slate-800 px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow shadow-sm placeholder:text-slate-400" placeholder="Optional" />
                     </div>
                   </div>
                   <div className="pt-4 flex gap-3">
-                    <button type="button" onClick={() => setSelectedAlert(null)} className="flex-1 bg-slate-800 text-slate-300 font-bold py-3 rounded-xl hover:bg-slate-700 transition-colors">Cancel</button>
-                    <button type="submit" className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 rounded-xl hover:from-blue-500 hover:to-indigo-500 transition-colors shadow-lg shadow-blue-500/25">Register Subject</button>
+                    <button type="button" onClick={() => setSelectedAlert(null)} className="flex-1 bg-white text-slate-700 border border-slate-300 font-bold py-3 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">Cancel</button>
+                    <button type="submit" className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-colors shadow-md shadow-blue-500/20">Register Subject</button>
                   </div>
                 </form>
               </div>

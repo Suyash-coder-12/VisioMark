@@ -158,6 +158,17 @@ app.get('/api/attendance', (req, res) => {
     });
 });
 
+// 5.5 ATTENDANCE: Get today's attendance count
+app.get('/api/attendance/count', (req, res) => {
+    const today = new Date().toISOString().split('T')[0];
+    const sql = `SELECT COUNT(*) as count FROM attendance_logs WHERE date = ?`;
+    
+    db.get(sql, [today], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ count: row.count });
+    });
+});
+
 // 6. ATTENDANCE: Get attendance history (optional date filter)
 app.get('/api/attendance/history', (req, res) => {
     const date = req.query.date;
