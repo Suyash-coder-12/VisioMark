@@ -12,6 +12,8 @@ UNKNOWN_FACES_DIR = 'unknown_faces'
 CAPTURED_STUDENTS_DIR = 'Captured_Students_in_Lab'
 DB_PATH = 'attendance.db'
 COOLDOWN_SECONDS = 5
+logged_unknown_encodings = []
+recent_face_history = []
 
 # Ensure directories exist
 os.makedirs(KNOWN_FACES_DIR, exist_ok=True)
@@ -77,6 +79,12 @@ def mark_attendance(conn, name, frame):
     now = datetime.now()
     current_date = now.strftime("%Y-%m-%d")
     current_time = now.strftime("%H:%M:%S")
+    
+    # Check if already marked today
+    cursor.execute("SELECT 1 FROM attendance_logs WHERE name = ? AND date = ?", (name, current_date))
+    if cursor.fetchone():
+        return # Already marked today
+        
     timestamp_filename = now.strftime("%Y%m%d_%H%M%S")
     
     # Save photo of the student to Captured_Students_in_Lab
@@ -156,6 +164,19 @@ def main():
         
         face_names = []
         for face_encoding in face_encodings:
+            is_static_fake = False
+            if recent_face_history:
+                distances = face_recognition.face_distance(recent_face_history, face_encoding)
+                if min(distances) < 0.015:
+                    is_static_fake = True
+            
+            recent_face_history.append(face_encoding)
+            if len(recent_face_history) > 10:
+                recent_face_history.pop(0)
+                
+            if is_static_fake:
+                continue
+                
             matches = face_recognition.compare_faces(known_encodings, face_encoding)
             name = "Unknown"
             
@@ -172,11 +193,15 @@ def main():
             if name != "Unknown":
                 mark_attendance(conn, name, frame)
             else:
-                current_time = time.time()
-                # 5-second cooldown to prevent spamming
-                if current_time - last_alert_time > COOLDOWN_SECONDS:
+                is_already_logged = False
+                if logged_unknown_encodings:
+                    matches_unk = face_recognition.compare_faces(logged_unknown_encodings, face_encoding, tolerance=0.5)
+                    if True in matches_unk:
+                        is_already_logged = True
+                        
+                if not is_already_logged:
+                    logged_unknown_encodings.append(face_encoding)
                     log_security_alert(conn, frame)
-                    last_alert_time = current_time
                     
         # Draw bounding boxes and names
         for (top, right, bottom, left), name in zip(face_locations, face_names):
