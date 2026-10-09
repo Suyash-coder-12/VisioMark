@@ -21,6 +21,7 @@ DB_PATH = 'attendance.db'
 known_encodings = []
 known_names = []
 logged_unknown_encodings = []  # Keep track of unknowns in this session
+recent_face_history = []  # Keep track of recent encodings for anti-spoofing
 last_mtime = 0
 last_alert_time = 0
 COOLDOWN_SECONDS = 5
@@ -130,16 +131,39 @@ def scan_frame():
         if frame_bgr is None:
              return jsonify([]), 200
 
-        # Use original frame size for accurate detection
         rgb_frame = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
         
-        face_locations = face_recognition.face_locations(rgb_frame)
-        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+        # Downscale frame for faster face detection
+        small_frame = cv2.resize(rgb_frame, (0, 0), fx=0.5, fy=0.5)
+        
+        face_locations = face_recognition.face_locations(small_frame)
+        
+        # Scale back the locations since the frame was resized to 1/2 size
+        scaled_face_locations = []
+        for (top, right, bottom, left) in face_locations:
+            scaled_face_locations.append((top * 2, right * 2, bottom * 2, left * 2))
+            
+        # Use the original rgb_frame for encodings to get better accuracy
+        face_encodings = face_recognition.face_encodings(rgb_frame, scaled_face_locations)
         
         results = []
         conn = setup_db()
         
-        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+        for (top, right, bottom, left), face_encoding in zip(scaled_face_locations, face_encodings):
+            # Basic Anti-Spoofing: Check if face is perfectly static (photo/phone)
+            is_static_fake = False
+            if recent_face_history:
+                distances = face_recognition.face_distance(recent_face_history, face_encoding)
+                if min(distances) < 0.015:  # Extremely small variance means it's likely a static photo
+                    is_static_fake = True
+            
+            recent_face_history.append(face_encoding)
+            if len(recent_face_history) > 10:
+                recent_face_history.pop(0)
+                
+            if is_static_fake:
+                continue # Skip processing this face as it appears to be a static photo/screen
+                
             name = "Unknown"
             if known_encodings:
                 matches = face_recognition.compare_faces(known_encodings, face_encoding, tolerance=0.5)
