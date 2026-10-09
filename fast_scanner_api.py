@@ -20,6 +20,7 @@ DB_PATH = 'attendance.db'
 # In-memory storage for AI models
 known_encodings = []
 known_names = []
+logged_unknown_encodings = []  # Keep track of unknowns in this session
 last_mtime = 0
 last_alert_time = 0
 COOLDOWN_SECONDS = 5
@@ -57,6 +58,12 @@ def mark_attendance(conn, name, frame):
     now = datetime.now()
     current_date = now.strftime("%Y-%m-%d")
     current_time = now.strftime("%H:%M:%S")
+    
+    # Check if already marked today before saving image
+    cursor.execute("SELECT 1 FROM attendance_logs WHERE name = ? AND date = ?", (name, current_date))
+    if cursor.fetchone():
+        return # Already marked today, skip saving duplicate photo
+        
     timestamp_filename = now.strftime("%Y%m%d_%H%M%S")
     
     # Save photo of the student to Captured_Students_in_Lab
@@ -70,7 +77,7 @@ def mark_attendance(conn, name, frame):
                        (name, current_date, current_time))
         conn.commit()
     except sqlite3.IntegrityError:
-        pass # Already marked today
+        pass # Fallback in case of race condition
 
 def log_security_alert(conn, frame):
     global last_alert_time
@@ -147,8 +154,17 @@ def scan_frame():
                 original_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
                 mark_attendance(conn, name, original_rgb)
             else:
-                original_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
-                log_security_alert(conn, original_rgb)
+                # Check if this unknown face was already logged in this session
+                is_already_logged = False
+                if logged_unknown_encodings:
+                    matches = face_recognition.compare_faces(logged_unknown_encodings, face_encoding, tolerance=0.5)
+                    if True in matches:
+                        is_already_logged = True
+                        
+                if not is_already_logged:
+                    logged_unknown_encodings.append(face_encoding)
+                    original_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+                    log_security_alert(conn, original_rgb)
                 
             results.append({
                 "name": name,
