@@ -98,6 +98,7 @@ def log_security_alert(conn, frame):
     conn.commit()
 
 @app.route('/scan', methods=['POST'])
+@app.route('/', methods=['POST'])
 def scan_frame():
     global last_mtime
     data = request.json
