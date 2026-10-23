@@ -104,7 +104,7 @@ node server.js
 ```bash
 python fast_scanner_api.py
 ```
-
+  
 **Terminal 3: React Frontend**
 ```bash
 cd frontend
@@ -115,3 +115,4 @@ npm run dev
 <div align="center">
   <i>Engineered for Security, Optimized for Speed.</i>
 </div>
+** VisioMark**
